@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Savings App - Test de conexión</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Supabase JS Client via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  
+  <div class="max-w-md w-full p-8 bg-gray-800 rounded-2xl shadow-2xl">
+    <h1 class="text-3xl font-bold mb-4 text-center">Savings App 💰</h1>
+    <p class="text-gray-400 text-center mb-6">Test de conexión a Supabase</p>
+    
+    <div id="status" class="p-4 rounded-lg bg-gray-700 text-center">
+      <p class="text-yellow-400">⏳ Conectando...</p>
+    </div>
+    
+    <div class="mt-6 text-sm text-gray-500 text-center">
+      Abre la consola del navegador (F12) para ver detalles
+    </div>
+  </div>
+
+  <!-- Scripts del proyecto (orden importante: config primero, luego supabase) -->
+  <script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
+  
+  <!-- Test de conexión inline -->
+  <script>
+    async function testConnection() {
+      const statusEl = document.getElementById('status');
+      
+      try {
+        // Intentamos una query simple (count de profiles)
+        const { count, error } = await supabaseClient
+          .from('profiles')
+          .select('*', { count: 'exact', head: true });
+        
+        if (error) throw error;
+        
+        statusEl.innerHTML = `
+          <p class="text-green-400 font-semibold">✅ Conexión exitosa</p>
+          <p class="text-gray-400 text-sm mt-2">Usuarios registrados: ${count || 0}</p>
+        `;
+        console.log('✅ Conexión exitosa. Count:', count);
+        
+      } catch (err) {
+        statusEl.innerHTML = `
+          <p class="text-red-400 font-semibold">❌ Error de conexión</p>
+          <p class="text-gray-400 text-sm mt-2">${err.message}</p>
+        `;
+        console.error('❌ Error:', err);
+      }
+    }
+    
+    testConnection();
+  </script>
+</body>
+</html>

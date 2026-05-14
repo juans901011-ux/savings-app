@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro - Savings App</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Supabase JS Client via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center p-4">
+  
+  <div class="max-w-md w-full p-8 bg-gray-800 rounded-2xl shadow-2xl">
+    
+    <!-- Encabezado -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold mb-2">Crear cuenta 💰</h1>
+      <p class="text-gray-400 text-sm">Únete a la comunidad de ahorradores</p>
+    </div>
+    
+    <!-- Formulario -->
+    <form id="register-form" class="space-y-4">
+      
+      <!-- Nickname -->
+      <div>
+        <label for="nickname" class="block text-sm font-medium text-gray-300 mb-1">
+          Nickname *
+        </label>
+        <input 
+          type="text" 
+          id="nickname" 
+          name="nickname"
+          required
+          minlength="3"
+          maxlength="20"
+          pattern="[a-zA-Z0-9_]+"
+          title="Solo letras, números y guion bajo"
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          placeholder="traderpro">
+      </div>
+      
+      <!-- Email -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-300 mb-1">
+          Email *
+        </label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email"
+          required
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          placeholder="tu@email.com">
+      </div>
+      
+      <!-- Password -->
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-300 mb-1">
+          Contraseña *
+        </label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password"
+          required
+          minlength="8"
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          placeholder="Mínimo 8 caracteres">
+        <p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p>
+      </div>
+      
+      <!-- Fecha de nacimiento -->
+      <div>
+        <label for="birth_date" class="block text-sm font-medium text-gray-300 mb-1">
+          Fecha de nacimiento *
+        </label>
+        <input 
+          type="date" 
+          id="birth_date" 
+          name="birth_date"
+          required
+          max="2008-01-01"
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+        <p class="text-xs text-gray-500 mt-1">Debes ser mayor de 18 años</p>
+      </div>
+      
+      <!-- Género -->
+      <div>
+        <label for="gender" class="block text-sm font-medium text-gray-300 mb-1">
+          Género *
+        </label>
+        <select 
+          id="gender" 
+          name="gender"
+          required
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+          <option value="">Selecciona una opción</option>
+          <option value="masculino">Masculino</option>
+          <option value="femenino">Femenino</option>
+          <option value="otro">Otro</option>
+          <option value="prefiero_no_decir">Prefiero no decir</option>
+        </select>
+      </div>
+      
+      <!-- País -->
+      <div>
+        <label for="country" class="block text-sm font-medium text-gray-300 mb-1">
+          País de residencia *
+        </label>
+        <select 
+          id="country" 
+          name="country"
+          required
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+          <option value="">Selecciona tu país</option>
+          <option value="Colombia">Colombia</option>
+          <option value="México">México</option>
+          <option value="Argentina">Argentina</option>
+          <option value="Chile">Chile</option>
+          <option value="Perú">Perú</option>
+          <option value="España">España</option>
+          <option value="Estados Unidos">Estados Unidos</option>
+          <option value="Ecuador">Ecuador</option>
+          <option value="Venezuela">Venezuela</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+      
+      <!-- Mensaje de estado -->
+      <div id="message" class="hidden p-3 rounded-lg text-sm text-center"></div>
+      
+      <!-- Botón submit -->
+      <button 
+        type="submit" 
+        id="submit-btn"
+        class="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        Crear cuenta
+      </button>
+      
+    </form>
+    
+    <!-- Link a login -->
+    <p class="text-center text-sm text-gray-400 mt-6">
+      ¿Ya tienes cuenta? 
+      <a href="login.html" class="text-blue-400 hover:text-blue-300 font-medium">
+        Inicia sesión
+      </a>
+    </p>
+    
+  </div>
+
+  <!-- Scripts (orden importante) -->
+  <script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

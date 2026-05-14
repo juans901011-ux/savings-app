@@ -1,0 +1,27 @@
+# Configuración sensible (claves API)
+js/config.js
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Configuración sensible (claves API)
+js/config.js
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Dependencias futuras
+node_modules/
+
+# Build outputs
+dist/
+build/

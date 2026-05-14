@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Savings App</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+  
+  <!-- HEADER -->
+  <header class="bg-gray-800 border-b border-gray-700 shadow-lg">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold">💰 Savings App</h1>
+        <p class="text-sm text-gray-400">Hola, <span id="user-nickname" class="text-blue-400 font-medium">...</span></p>
+      </div>
+      <button 
+        id="logout-btn"
+        class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition-colors">
+        Cerrar sesión
+      </button>
+    </div>
+  </header>
+  
+  <!-- LOADER (mientras verifica sesión) -->
+  <div id="loader" class="flex justify-center items-center py-20">
+    <p class="text-gray-400">⏳ Cargando...</p>
+  </div>
+  
+  <!-- CONTENIDO PRINCIPAL (oculto hasta que cargue) -->
+  <main id="main-content" class="hidden max-w-6xl mx-auto px-4 py-8 space-y-6">
+    
+    <!-- TARJETAS DE RESUMEN -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      
+      <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-2xl shadow-lg">
+        <p class="text-blue-200 text-sm font-medium">Ahorro inicial</p>
+        <p id="initial-amount" class="text-3xl font-bold mt-2">$0</p>
+      </div>
+      
+      <div class="bg-gradient-to-br from-green-600 to-green-800 p-6 rounded-2xl shadow-lg">
+        <p class="text-green-200 text-sm font-medium">Ahorros recurrentes</p>
+        <p id="recurring-total" class="text-3xl font-bold mt-2">$0</p>
+        <p id="recurring-count" class="text-xs text-green-200 mt-1">0 aportes</p>
+      </div>
+      
+      <div class="bg-gradient-to-br from-purple-600 to-purple-800 p-6 rounded-2xl shadow-lg">
+        <p class="text-purple-200 text-sm font-medium">Total acumulado</p>
+        <p id="total-saved" class="text-3xl font-bold mt-2">$0</p>
+      </div>
+      
+    </section>
+    
+    <!-- AHORRO INICIAL (solo si no existe) -->
+    <section id="initial-section" class="hidden bg-gradient-to-r from-yellow-900 to-orange-900 border-2 border-yellow-600 p-6 rounded-2xl">
+      <h2 class="text-xl font-bold mb-2">⭐ Registra tu ahorro inicial</h2>
+      <p class="text-yellow-200 text-sm mb-4">Este es el monto con el que arrancas el reto. Solo se puede registrar una vez.</p>
+      
+      <form id="initial-form" class="flex flex-col sm:flex-row gap-3">
+        <input 
+          type="number" 
+          id="initial-amount-input" 
+          name="amount"
+          required
+          min="0.01"
+          step="0.01"
+          placeholder="Monto inicial"
+          class="flex-1 px-4 py-2 bg-gray-800 border border-yellow-600 rounded-lg focus:ring-2 focus:ring-yellow-500 outline-none">
+        
+        <select 
+          id="initial-currency" 
+          name="currency"
+          class="px-4 py-2 bg-gray-800 border border-yellow-600 rounded-lg outline-none">
+          <option value="USD">USD</option>
+          <option value="COP">COP</option>
+          <option value="MXN">MXN</option>
+          <option value="EUR">EUR</option>
+        </select>
+        
+        <button 
+          type="submit" 
+          id="initial-submit"
+          class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg font-semibold transition-colors disabled:opacity-50">
+          Registrar
+        </button>
+      </form>
+      
+      <div id="initial-message" class="hidden mt-3 p-3 rounded-lg text-sm text-center"></div>
+    </section>
+    
+    <!-- AHORRO RECURRENTE -->
+    <section class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
+      <h2 class="text-xl font-bold mb-4">💸 Registrar ahorro</h2>
+      
+      <form id="recurring-form" class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        
+        <div class="md:col-span-2">
+          <label class="block text-xs text-gray-400 mb-1">Monto</label>
+          <input 
+            type="number" 
+            id="recurring-amount" 
+            name="amount"
+            required
+            min="0.01"
+            step="0.01"
+            placeholder="0.00"
+            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+        </div>
+        
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Moneda</label>
+          <select 
+            id="recurring-currency" 
+            name="currency"
+            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg outline-none">
+            <option value="USD">USD</option>
+            <option value="COP">COP</option>
+            <option value="MXN">MXN</option>
+            <option value="EUR">EUR</option>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Frecuencia</label>
+          <select 
+            id="recurring-frequency" 
+            name="frequency"
+            required
+            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg outline-none">
+            <option value="weekly">Semanal</option>
+            <option value="biweekly">Quincenal</option>
+            <option value="monthly">Mensual</option>
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-xs text-gray-400 mb-1">Fecha del periodo</label>
+          <input 
+            type="date" 
+            id="recurring-date" 
+            name="period_date"
+            required
+            class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg outline-none">
+        </div>
+        
+        <div class="md:col-span-5">
+          <button 
+            type="submit" 
+            id="recurring-submit"
+            class="w-full py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors disabled:opacity-50">
+            Registrar ahorro
+          </button>
+        </div>
+      </form>
+      
+      <div id="recurring-message" class="hidden mt-3 p-3 rounded-lg text-sm text-center"></div>
+    </section>
+    
+    <!-- HISTORIAL -->
+    <section class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
+      <h2 class="text-xl font-bold mb-4">📊 Historial de ahorros</h2>
+      
+      <div id="history-empty" class="hidden text-center py-8 text-gray-400">
+        Aún no has registrado ningún ahorro. ¡Comienza arriba!
+      </div>
+      
+      <div id="history-container" class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="text-gray-400 border-b border-gray-700">
+            <tr>
+              <th class="text-left py-2 px-3">Fecha periodo</th>
+              <th class="text-left py-2 px-3">Frecuencia</th>
+              <th class="text-right py-2 px-3">Monto</th>
+              <th class="text-left py-2 px-3">Moneda</th>
+              <th class="text-left py-2 px-3 hidden md:table-cell">Registrado</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <!-- Filas se generan con JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/savings.js"></script>
+</body>
+</html>
