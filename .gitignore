@@ -6,7 +6,7 @@ js/config.js
 Thumbs.db
 
 # Configuración sensible (claves API)
-js/config.js
+# js/config.js  ← antes ignorado, ahora se sube al repo (publishable key es segura)
 
 # Archivos del sistema
 .DS_Store
